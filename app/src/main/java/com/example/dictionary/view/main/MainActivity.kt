@@ -5,7 +5,6 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.Toast
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dictionary.R
 import com.example.dictionary.view.base.BaseActivity
@@ -14,15 +13,12 @@ import com.example.dictionary.view.main.adapter.MainAdapter
 import com.example.dictionary.model.data.AppState
 import com.example.dictionary.model.data.DataModel
 import com.example.dictionary.utils.isOnline
-import dagger.android.AndroidInjection
-import javax.inject.Inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseActivity<AppState, MainInteractor>() {
-    @Inject
-    internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var binding: ActivityMainBinding
-    private val adapter: MainAdapter by lazy { MainAdapter(onListItemClickListener) }
     override lateinit var model: MainViewModel
+    private val adapter: MainAdapter by lazy { MainAdapter(onListItemClickListener) }
 
     private val fabClickListener: View.OnClickListener = View.OnClickListener {
         val searchDialogFragment = SearchDialogFragment.newInstance()
@@ -46,12 +42,23 @@ class MainActivity : BaseActivity<AppState, MainInteractor>() {
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        model = viewModelFactory.create(MainViewModel::class.java)
+        initViewModel()
+        initViews()
+    }
+
+    private fun initViewModel() {
+        if (binding.mainActivityRecyclerview.adapter != null)
+            throw IllegalStateException("Initialize ViewModel first")
+
+        val viewModel: MainViewModel by viewModel()
+        model = viewModel
         model.subscribe().observe(this@MainActivity, { renderData(it) })
+    }
+
+    private fun initViews() {
         binding.searchFab.setOnClickListener(fabClickListener)
         binding.mainActivityRecyclerview.layoutManager = LinearLayoutManager(applicationContext)
         binding.mainActivityRecyclerview.adapter = adapter
@@ -62,11 +69,7 @@ class MainActivity : BaseActivity<AppState, MainInteractor>() {
             is AppState.Success -> {
                 showViewWorking()
                 val dataModel = appState.data
-                if (dataModel.isNullOrEmpty())
-                    showAlertDialog(
-                        getString(R.string.dialog_tittle_warning),
-                        getString(R.string.empty_server_response_on_success)
-                    )
+                if (dataModel.isNullOrEmpty()) showAlertDialog(getString(R.string.dialog_tittle_warning), getString(R.string.empty_server_response_on_success))
                 else adapter.setData(dataModel)
             }
             is AppState.Loading -> {
@@ -94,7 +97,6 @@ class MainActivity : BaseActivity<AppState, MainInteractor>() {
     private fun showViewWorking() {
         binding.loadingFrameLayout.visibility = GONE
     }
-
 
     companion object {
         private const val BOTTOM_SHEET_FRAGMENT_DIALOG_TAG =

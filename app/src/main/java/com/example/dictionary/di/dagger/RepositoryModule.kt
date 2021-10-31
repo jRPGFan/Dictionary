@@ -1,5 +1,7 @@
-package com.example.dictionary.di
+package com.example.dictionary.di.dagger
 
+import com.example.dictionary.di.NAME_LOCAL
+import com.example.dictionary.di.NAME_REMOTE
 import com.example.dictionary.model.data.DataModel
 import com.example.dictionary.model.datasource.DataSource
 import com.example.dictionary.model.datasource.RetrofitImplementation

@@ -1,4 +1,4 @@
-package com.example.dictionary.di
+package com.example.dictionary.di.dagger
 
 import com.example.dictionary.view.main.MainActivity
 import dagger.Module

@@ -1,4 +1,4 @@
-package com.example.dictionary.di
+package com.example.dictionary.di.dagger
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

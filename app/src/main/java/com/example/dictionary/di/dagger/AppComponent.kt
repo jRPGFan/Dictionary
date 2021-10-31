@@ -1,4 +1,4 @@
-package com.example.dictionary.di
+package com.example.dictionary.di.dagger
 
 import android.app.Application
 import com.example.dictionary.application.DictionaryApp
