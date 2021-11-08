@@ -7,10 +7,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dictionary.R
 import com.example.dictionary.model.data.DataModel
+import com.example.dictionary.utils.convertMeaningsToString
 
-class MainAdapter(
-    private var onListItemClickListener: OnListItemClickListener
-) : RecyclerView.Adapter<MainAdapter.RecyclerItemViewHolder>() {
+class MainAdapter(private var onListItemClickListener: OnListItemClickListener) :
+    RecyclerView.Adapter<MainAdapter.RecyclerItemViewHolder>() {
 
     private var data: List<DataModel> = arrayListOf()
 
@@ -42,7 +42,7 @@ class MainAdapter(
             if (layoutPosition != RecyclerView.NO_POSITION) {
                 itemView.findViewById<TextView>(R.id.recycler_item_header).text = data.text
                 itemView.findViewById<TextView>(R.id.recycler_item_description).text =
-                    data.meanings?.get(0)?.translation?.translation
+                    convertMeaningsToString(data.meanings!!)
                 itemView.setOnClickListener { openInNewWindow(data) }
             }
         }

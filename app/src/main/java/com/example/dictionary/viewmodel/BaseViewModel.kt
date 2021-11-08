@@ -6,7 +6,7 @@ import com.example.dictionary.model.data.AppState
 import kotlinx.coroutines.*
 
 abstract class BaseViewModel<T : AppState>(
-    protected open val liveData: MutableLiveData<T> = MutableLiveData()
+    protected open val _mutableLiveData: MutableLiveData<T> = MutableLiveData()
 ) : ViewModel() {
     protected val viewModelCoroutineScope = CoroutineScope(
         Dispatchers.Main + SupervisorJob() + CoroutineExceptionHandler { _, throwable ->
