@@ -14,7 +14,7 @@
         android:theme="@style/AppTheme"
         android:name=".application.DictionaryApp">
         <activity
-            android:name="com.example.dictionary.view.main.MainActivity"
+            android:name="com.example.dictionary.main.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,7 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.description.DescriptionActivity" />
-        <activity android:name=".view.history.HistoryActivity"/>
+<!--        <activity android:name="com.example.core.description.DescriptionActivity" />-->
+<!--        <activity android:name="com.example.history.ui.HistoryActivity"/>-->
     </application>
 </manifest>

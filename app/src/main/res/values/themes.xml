@@ -3,7 +3,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+<!--        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>-->
     </style>
 
     <style name="BaseTextStyle" parent="TextAppearance.MaterialComponents.Body1">
@@ -36,11 +36,11 @@
         <item name="colorAccent">@color/colorPrimary</item>
     </style>
 
-    <style name="AppBottomSheetDialogTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
-        <item name="bottomSheetStyle">@style/AppModalStyle</item>
-    </style>
+<!--    <style name="AppBottomSheetDialogTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">-->
+<!--        <item name="bottomSheetStyle">@style/AppModalStyle</item>-->
+<!--    </style>-->
 
-    <style name="AppModalStyle" parent="Widget.MaterialComponents.BottomSheet.Modal">
-        <item name="android:background">@drawable/bottom_sheet_dialog_background</item>
-    </style>
+<!--    <style name="AppModalStyle" parent="Widget.MaterialComponents.BottomSheet.Modal">-->
+<!--        <item name="android:background">@drawable/bottom_sheet_dialog_background</item>-->
+<!--    </style>-->
 </resources>
