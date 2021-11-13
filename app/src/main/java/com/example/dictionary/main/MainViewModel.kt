@@ -3,7 +3,7 @@ package com.example.dictionary.main
 import androidx.lifecycle.LiveData
 import com.example.base.BaseViewModel
 import com.example.model.AppState
-import com.example.model.DataModel
+import com.example.model.userdata.DataModel
 import kotlinx.coroutines.launch
 
 class MainViewModel(private val interactor: MainInteractor) : BaseViewModel<AppState>() {

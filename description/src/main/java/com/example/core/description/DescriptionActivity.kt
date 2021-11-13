@@ -6,10 +6,13 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import coil.ImageLoader
 import coil.request.LoadRequestBuilder
 import com.example.core.R
 import com.example.core.databinding.ActivityDescriptionBinding
+import com.example.utils.AlertDialogFragment
+import com.example.utils.OnlineLiveData
 
 class DescriptionActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDescriptionBinding
@@ -34,7 +37,7 @@ class DescriptionActivity : AppCompatActivity() {
         }
     }
 
-    private fun setActionbarHomeButtonAsUp(){
+    private fun setActionbarHomeButtonAsUp() {
         supportActionBar?.setHomeButtonEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
@@ -49,14 +52,19 @@ class DescriptionActivity : AppCompatActivity() {
     }
 
     private fun startLoadingOrShowError() {
-        if (com.example.utils.isOnline(applicationContext)) setData()
-        else {
-            com.example.utils.AlertDialogFragment.Companion.newInstance(
-                getString(R.string.dialog_title_device_is_offline),
-                getString(R.string.dialog_message_device_is_offline)
-            ).show(supportFragmentManager, DIALOG_FRAGMENT_TAG)
-            stopRefreshAnimationIfNeeded()
-        }
+        OnlineLiveData(this).observe(
+            this@DescriptionActivity,
+            Observer<Boolean> {
+                if (it) setData()
+                else {
+                    AlertDialogFragment.Companion.newInstance(
+                        getString(R.string.dialog_title_device_is_offline),
+                        getString(R.string.dialog_message_device_is_offline)
+                    ).show(supportFragmentManager, DIALOG_FRAGMENT_TAG)
+                    stopRefreshAnimationIfNeeded()
+                }
+            }
+        )
     }
 
     private fun stopRefreshAnimationIfNeeded() {

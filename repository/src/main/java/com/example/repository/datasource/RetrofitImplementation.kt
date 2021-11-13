@@ -1,6 +1,6 @@
 package com.example.repository.datasource
 
-import com.example.model.DataModel
+import com.example.model.dto.SearchResultDTO
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -8,8 +8,8 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class RetrofitImplementation : DataSource<List<DataModel>> {
-    override suspend fun getData(word: String): List<DataModel> =
+class RetrofitImplementation : DataSource<List<SearchResultDTO>> {
+    override suspend fun getData(word: String): List<SearchResultDTO> =
         getService(BaseInterceptor.interceptor).searchAsync(word).await()
 
     private fun getService(interceptor: Interceptor): ApiService =

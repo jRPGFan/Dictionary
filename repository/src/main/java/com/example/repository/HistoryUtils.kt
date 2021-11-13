@@ -1,22 +1,25 @@
 package com.example.repository
 
 import com.example.model.AppState
-import com.example.model.DataModel
-import com.example.model.Meanings
-import com.example.model.Translation
+import com.example.model.dto.MeaningsDTO
+import com.example.model.dto.SearchResultDTO
+import com.example.model.dto.TranslationDTO
+import com.example.model.userdata.DataModel
+import com.example.model.userdata.Meaning
+import com.example.model.userdata.TranslatedMeaning
 import com.example.repository.room.HistoryEntity
 import com.example.utils.convertMeaningsToString
 
-fun mapHistoryEntityToSearchResult(list: List<HistoryEntity>): List<DataModel> {
-    val searchResult = ArrayList<DataModel>()
+fun mapHistoryEntityToSearchResult(list: List<HistoryEntity>): List<SearchResultDTO> {
+    val searchResult = ArrayList<SearchResultDTO>()
     if (!list.isNullOrEmpty())
         for (entity in list)
             searchResult.add(
-                DataModel(
+                SearchResultDTO(
                     entity.word,
                     arrayListOf(
-                        Meanings(
-                            Translation(entity.description ?: ""),
+                        MeaningsDTO(
+                            TranslationDTO(entity.description ?: ""),
                             entity.imageUrl ?: ""
                         )
                     )
@@ -27,13 +30,13 @@ fun mapHistoryEntityToSearchResult(list: List<HistoryEntity>): List<DataModel> {
 }
 
 fun mapHistoryEntityToDataModel(historyEntity: HistoryEntity): DataModel {
-    var searchResult = DataModel("", null)
+    var searchResult = DataModel("", arrayListOf())
     if (historyEntity.word.isNotBlank())
         searchResult = DataModel(
             historyEntity.word,
             arrayListOf(
-                Meanings(
-                    Translation(historyEntity.description ?: ""),
+                Meaning(
+                    TranslatedMeaning(historyEntity.description ?: ""),
                     historyEntity.imageUrl ?: ""
                 )
             )

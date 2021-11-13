@@ -5,12 +5,14 @@ import com.example.base.BaseActivity
 import com.example.history.databinding.ActivityHistoryBinding
 import com.example.history.interactor.HistoryInteractor
 import com.example.model.AppState
-import com.example.model.DataModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.example.model.userdata.DataModel
+import org.koin.core.qualifier.named
+import org.koin.java.KoinJavaComponent.getKoin
 
 class HistoryActivity : BaseActivity<AppState, HistoryInteractor>() {
     private lateinit var binding: ActivityHistoryBinding
     override lateinit var model: HistoryViewModel
+    private val scope = getKoin().createScope("historyScope", named<HistoryActivity>())
     private val adapter: HistoryAdapter by lazy { HistoryAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +37,7 @@ class HistoryActivity : BaseActivity<AppState, HistoryInteractor>() {
         if (binding.historyRecyclerview.adapter != null) {
             throw IllegalStateException("The ViewModel should be initialized first")
         }
-        val viewModel: HistoryViewModel by viewModel()
+        val viewModel: HistoryViewModel by scope.inject()
         model = viewModel
         model.subscribe().observe(this@HistoryActivity, { renderData(it) })
     }

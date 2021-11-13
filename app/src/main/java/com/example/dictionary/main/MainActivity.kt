@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.base.BaseActivity
 import com.example.core.description.DescriptionActivity
 import com.example.dictionary.R
@@ -14,16 +15,22 @@ import com.example.dictionary.main.adapter.MainAdapter
 import com.example.history.ui.HistoryActivity
 import com.example.history.ui.SearchHistoryDialogFragment
 import com.example.model.AppState
-import com.example.model.DataModel
+import com.example.model.userdata.DataModel
+import com.example.utils.viewById
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.qualifier.named
+import org.koin.java.KoinJavaComponent.getKoin
 
 class MainActivity : BaseActivity<AppState, MainInteractor>() {
     private lateinit var binding: ActivityMainBinding
     override lateinit var model: MainViewModel
+    private val mainActivityRecyclerView by viewById<RecyclerView>(R.id.main_activity_recyclerview)
+    private val searchFAB by viewById<FloatingActionButton>(R.id.search_fab)
+    private val scope = getKoin().createScope("activityScope", named<MainActivity>())
     private val adapter: MainAdapter by lazy { MainAdapter(onListItemClickListener) }
 
     private val fabClickListener: View.OnClickListener = View.OnClickListener {
@@ -41,7 +48,6 @@ class MainActivity : BaseActivity<AppState, MainInteractor>() {
     private val onSearchClickListener: SearchDialogFragment.OnSearchClickListener =
         object : SearchDialogFragment.OnSearchClickListener {
             override fun onClick(searchWord: String) {
-                isNetworkAvailable = com.example.utils.isOnline(applicationContext)
                 if (isNetworkAvailable) model.getData(searchWord, isNetworkAvailable)
                 else showNoInternetConnectionDialog()
             }
@@ -106,15 +112,15 @@ class MainActivity : BaseActivity<AppState, MainInteractor>() {
         if (binding.mainActivityRecyclerview.adapter != null)
             throw IllegalStateException("Initialize ViewModel first")
 
-        val viewModel: MainViewModel by viewModel()
+        val viewModel: MainViewModel by scope.inject()
         model = viewModel
         model.subscribe().observe(this@MainActivity,  { renderData(it) })
     }
 
     private fun initViews() {
-        binding.searchFab.setOnClickListener(fabClickListener)
-        binding.mainActivityRecyclerview.layoutManager = LinearLayoutManager(applicationContext)
-        binding.mainActivityRecyclerview.adapter = adapter
+        searchFAB.setOnClickListener(fabClickListener)
+        mainActivityRecyclerView.layoutManager = LinearLayoutManager(applicationContext)
+        mainActivityRecyclerView.adapter = adapter
     }
 
     override fun setDataToAdapter(data: List<DataModel>) {

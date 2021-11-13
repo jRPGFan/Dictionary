@@ -1,31 +1,43 @@
 package com.example.base
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import com.example.base.databinding.LoadingLayoutBinding
 import com.example.model.AppState
-import com.example.model.DataModel
+import com.example.model.userdata.DataModel
 import com.example.utils.AlertDialogFragment
-import com.example.utils.isOnline
+import com.example.utils.OnlineLiveData
 
 private const val DIALOG_FRAGMENT_TAG = "Dialog_Fragment_Tag"
 
 abstract class BaseActivity<T : AppState, I : Interactor<T>> : AppCompatActivity() {
     private lateinit var binding: LoadingLayoutBinding
     abstract val model: BaseViewModel<T>
-    protected var isNetworkAvailable: Boolean = false
+    protected var isNetworkAvailable: Boolean = true
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
-        isNetworkAvailable = isOnline(applicationContext)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        subscribeToNetworkChange()
+    }
+
+    private fun subscribeToNetworkChange() {
+        OnlineLiveData(this).observe(
+            this@BaseActivity,
+            Observer<Boolean> {
+                isNetworkAvailable = it
+                if (!isNetworkAvailable)
+                    Toast.makeText(this@BaseActivity,
+                        R.string.dialog_message_device_is_offline, Toast.LENGTH_SHORT).show()
+            }
+        )
     }
 
     override fun onResume() {
         super.onResume()
         binding = LoadingLayoutBinding.inflate(layoutInflater)
-        isNetworkAvailable = isOnline(applicationContext)
         if (!isNetworkAvailable && isDialogNull()) showNoInternetConnectionDialog()
     }
 
